@@ -1,21 +1,54 @@
 package fr.uga.l3miage.library.data.domain;
 
-import jakarta.persistence.Transient;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@NamedQueries({
+    @NamedQuery(name="all-books", 
+                query="SELECT b FROM Book b"),
+                
+    @NamedQuery(name="find-books-by-title", 
+                query="SELECT b FROM Book b WHERE b.title LIKE :pattern")
+
+    //@NamedQuery(name="find-books-by-author-and-title", 
+    //           query="SELECT b FROM Book b WHERE b.title LIKE :pattern AND (SELECT a FROM b.authors WHERE a.id = :authorId)")
+})
+@Entity
+@Table(name = "Book")
 public class Book {
 
+    @Id  
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private long isbn;
+
+    @Column(nullable = false)
     private String publisher;
+    
+    @Column(name="annee")
     private short year;
+    
+    @Enumerated
     private Language language;
 
-    @Transient
+    @ManyToMany(mappedBy = "books")
     private Set<Author> authors;
 
     public Long getId() {

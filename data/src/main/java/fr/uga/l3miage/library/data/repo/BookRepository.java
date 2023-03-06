@@ -2,6 +2,7 @@ package fr.uga.l3miage.library.data.repo;
 
 import fr.uga.l3miage.library.data.domain.Book;
 import jakarta.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -35,11 +36,10 @@ public class BookRepository implements CRUDRepository<Long, Book> {
     }
 
     /**
-     * Renvoie tous les auteurs par ordre alphabétique
+     * Renvoie tous les livres par ordre alphabétique
      * @return une liste de livres
      */
     public List<Book> all() {
-        // TODO créer les named query
         return entityManager.createNamedQuery("all-books", Book.class).getResultList();
     }
 
@@ -49,10 +49,10 @@ public class BookRepository implements CRUDRepository<Long, Book> {
      * @return une liste de livres
      */
     public List<Book> findByContainingTitle(String titlePart) {
-        // TODO créer les named query
+        String pattern = '%' + titlePart + '%';
         return entityManager.createNamedQuery("find-books-by-title", Book.class)
-                // TODO completer l'appel pour utiliser le paramètre de cette méthode
-                .getResultList();
+                            .setParameter("pattern", pattern)
+                            .getResultList();
     }
 
     /**
@@ -62,7 +62,6 @@ public class BookRepository implements CRUDRepository<Long, Book> {
      * @return une liste de livres
      */
     public List<Book> findByAuthorIdAndContainingTitle(Long authorId, String titlePart) {
-        // TODO créer les named query
         return entityManager.createNamedQuery("find-books-by-author-and-title", Book.class)
                 // TODO completer l'appel pour utiliser les paramètres de cette méthode
                 .getResultList();
