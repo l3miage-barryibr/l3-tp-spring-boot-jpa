@@ -26,25 +26,26 @@ import jakarta.persistence.TemporalType;
         query = "select b from Author a join Book b where a.id = :id and lower(b.title) LIKE :title"),
 
     @NamedQuery(name ="find-books-by-authors-name",
-        query =" select b from Author a join Book b where lower(a.fullName) LIKE :name"
-     )
+        query = "select b FROM Book b JOIN b.authors a WHERE lower(a.fullName) LIKE :name"),
+
+    @NamedQuery(name ="find-books-by-several-authors",
+        query = "select b FROM Book b JOIN b.authors a GROUP BY b.id HAVING COUNT(a.id) > :count")
+        //query = "select b FROM Book b GROUP BY b.id HAVING COUNT(b.authors) > :count")
+
 })
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name ="title", nullable =  false)
+    @Column(nullable =  false)
     private String title;
 
-    @Column(name = "isbn")
     private long isbn;
 
-    @Column(name = "publisher", updatable = true)
     private String publisher;
 
-
-    @Column(name ="annee",updatable = true)
+    @Column(name ="annee")
     @Temporal(TemporalType.DATE)
     private short year;
 
