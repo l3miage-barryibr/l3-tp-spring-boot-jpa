@@ -42,12 +42,11 @@ public class AuthorRepository implements CRUDRepository<Long, Author> {
      */
     @Override
     public List<Author> all() {
-        String jpql = "SELECT a FROM Author a ORDER BY a.fullName";
-        List<Author> res = entityManager.createQuery(jpql, Author.class)
-                                        .getResultList();
+        String reqAll = "select a from Author a where a.fullName = :fullName ";
+        List<Author> res = entityManager.createQuery(reqAll, Author.class)
+                .getResultList();
         return res;
     }
-
     /**
      * Recherche un auteur par nom (ou partie du nom) de façon insensible  à la casse.
      *
@@ -55,24 +54,25 @@ public class AuthorRepository implements CRUDRepository<Long, Author> {
      * @return une liste d'auteurs trié par nom
      */
     public List<Author> searchByName(String namePart) {
-        String pattern = '%' + namePart + '%';
-        String jpql = "SELECT a FROM Author a WHERE a.fullName LIKE :pattern";    //a ameliorer
-        List<Author> res = entityManager.createQuery(jpql, Author.class)
-                                        .setParameter("pattern", pattern)
-                                        .getResultList();
+        String search  = '%' + namePart +'%';
+        String reqName = "select n from Author n where n.fullName LIKE :name";
+        List<Author> res = entityManager.createQuery(reqName, Author.class)
+                .setParameter("name", search)
+                .getResultList();
         return res;
     }
-
     /**
      * Recherche si l'auteur a au moins un livre co-écrit avec un autre auteur
      *
      * @return true si l'auteur partage
      */
+
     public boolean checkAuthorByIdHavingCoAuthoredBooks(long authorId) {
-        Author author = entityManager.find(Author.class, authorId);
-        for (Book book: author.getBooks()){
-            if (book.getAuthors().size() > 1)
+        Author auteur = entityManager.find(Author.class,authorId);
+        for(Book book: auteur.getBooks() ){
+            if(book.getAuthors().size()> 1){
                 return true;
+            }
         }
         return false;
     }

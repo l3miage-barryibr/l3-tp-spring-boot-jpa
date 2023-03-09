@@ -1,5 +1,7 @@
 package fr.uga.l3miage.library.data.domain;
-
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -9,46 +11,48 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-
-@NamedQueries({
-    @NamedQuery(name="all-books", 
-                query="SELECT b FROM Book b"),
-                
-    @NamedQuery(name="find-books-by-title", 
-                query="SELECT b FROM Book b WHERE b.title LIKE :pattern")
-
-    //@NamedQuery(name="find-books-by-author-and-title", 
-    //           query="SELECT b FROM Book b WHERE b.title LIKE :pattern AND (SELECT a FROM b.authors WHERE a.id = :authorId)")
-})
 @Entity
-@Table(name = "Book")
-public class Book {
+@NamedQueries({
+    @NamedQuery(name = "all-books", 
+        query = "select b from Book b  ORDER BY b.title  ASC"),
 
-    @Id  
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @NamedQuery(name = "find-books-by-title",
+        query = "select t from Book t where lower(t.title) LIKE :name"),
+
+    @NamedQuery(name="find-books-by-author-and-title",
+        query = "select b from Author a join Book b where a.id = :id and lower(b.title) LIKE :title"),
+
+    @NamedQuery(name ="find-books-by-authors-name",
+        query =" select b from Author a join Book b where lower(a.fullName) LIKE :name"
+     )
+})
+public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name ="title", nullable =  false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(name = "isbn")
     private long isbn;
 
-    @Column(nullable = false)
+    @Column(name = "publisher", updatable = true)
     private String publisher;
-    
-    @Column(name="annee")
+
+
+    @Column(name ="annee",updatable = true)
+    @Temporal(TemporalType.DATE)
     private short year;
-    
+
+    // A revoire sur l'enumaration
     @Enumerated
     private Language language;
 
-    @ManyToMany(mappedBy = "books")
+    @ManyToMany(mappedBy ="books")
     private Set<Author> authors;
 
     public Long getId() {
