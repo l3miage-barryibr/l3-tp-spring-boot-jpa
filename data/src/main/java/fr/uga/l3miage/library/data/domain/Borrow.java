@@ -4,13 +4,32 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+
+@Entity
 public class Borrow {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private List<Book> books;
+
     private Date start;
     private Date requestedReturn;
+
+    @OneToMany(mappedBy = "borrow")
+    private List<Book> books;
+
+    @OneToOne
     private User borrower;
+
+    @OneToOne
     private Librarian librarian;
+    
     private boolean finished;
 
     public Long getId() {

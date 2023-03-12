@@ -46,7 +46,10 @@ public class BorrowRepository implements CRUDRepository<String, Borrow> {
      */
     public List<Borrow> findInProgressByUser(String userId) {
         // TODO
-        return null;
+        return entityManager.createQuery("select b From Borrow b Join User u Where u.id = :userId And b.finished = false"
+                                        , Borrow.class)
+                            .setParameter("userId", userId)
+                            .getResultList();
     }
 
     /**
@@ -88,8 +91,13 @@ public class BorrowRepository implements CRUDRepository<String, Borrow> {
      * @return les emprunt qui sont bientôt en retard
      */
     public List<Borrow> findAllBorrowThatWillLateWithin(int days) {
-        // TODO
-        return null;
+        return entityManager.createQuery("select b from Borrow b where TIMESTAMPDIFF(day, CURRENT_DATE, b.requestedReturn) < :days"
+                            , Borrow.class)
+                .setParameter("days", days)
+                .getResultList();
     }
-
+    //jours restants < days   -> true
+    //pris:  01/09
+    //retour: 30/09
+    //days: 40 jours  -> retard    (retour - pris = 30 jours < 40 jours)
 }

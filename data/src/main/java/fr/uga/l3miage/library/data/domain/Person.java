@@ -3,10 +3,32 @@ package fr.uga.l3miage.library.data.domain;
 import java.util.Date;
 import java.util.Objects;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.MappedSuperclass;
+
+@Inheritance(strategy = InheritanceType.JOINED)
+@Entity
+@DiscriminatorColumn(name="person_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Person {
 
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
+    
+    @Enumerated(EnumType.STRING)
     private Gender gender;
+    
     private String firstName;
     private String lastName;
     private Date birth;

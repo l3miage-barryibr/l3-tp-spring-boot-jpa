@@ -43,9 +43,8 @@ public class AuthorRepository implements CRUDRepository<Long, Author> {
     @Override
     public List<Author> all() {
         String reqAll = "select a from Author a where a.fullName = :fullName ";
-        List<Author> res = entityManager.createQuery(reqAll, Author.class)
+        return entityManager.createQuery(reqAll, Author.class)
                 .getResultList();
-        return res;
     }
     /**
      * Recherche un auteur par nom (ou partie du nom) de façon insensible  à la casse.
@@ -56,10 +55,9 @@ public class AuthorRepository implements CRUDRepository<Long, Author> {
     public List<Author> searchByName(String namePart) {
         String search  = '%' + namePart +'%';
         String reqName = "select n from Author n where n.fullName LIKE :name";
-        List<Author> res = entityManager.createQuery(reqName, Author.class)
+        return entityManager.createQuery(reqName, Author.class)
                 .setParameter("name", search)
                 .getResultList();
-        return res;
     }
     /**
      * Recherche si l'auteur a au moins un livre co-écrit avec un autre auteur

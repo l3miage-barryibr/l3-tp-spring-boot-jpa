@@ -9,8 +9,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
@@ -55,6 +57,9 @@ public class Book {
 
     @ManyToMany(mappedBy ="books")
     private Set<Author> authors;
+
+    @ManyToOne
+    private Borrow borrow;
 
     public Long getId() {
         return id;
